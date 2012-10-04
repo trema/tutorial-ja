@@ -1,7 +1,7 @@
 # Quick Start
 
-	git clone git://github.com/trema/tutorial.git
-	cd tutorial
+	git clone git://github.com/trema/tutorial-ja.git
+	cd tutorial-ja
 
 	# run the standard presentation
 	showoff serve
@@ -21,6 +21,6 @@ Try this: first `gem install pdfkit`, then visit
 
 
 # LICENSE
-Copyright (c) 2012 Yasuhito Takamiya
+Copyright (c) 2012 Yasuhito Takamiya, Kazuya Suzuki
 
 Licensed under the GPL3 license
