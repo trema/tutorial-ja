@@ -1,21 +1,21 @@
 <!SLIDE small>
 # Task D: Learning Switch ######################################################
 
-## Sending flow\_mod and packet\_out
+## flow\_mod と packet\_out を送る
 
 
 <!SLIDE smaller>
-# Exercise: Packet Stats Info ##################################################
+# 演習: 送受信パケット量を表示する ##################################################
 
-## Launch a L2 switch controller:
+## L2 スイッチコントローラ (learning_switch) を起動する:
 
 	$ trema run learning-switch.rb -c learning-switch.conf
 
 <br />
 <br />
 
-## Send a test packet on another terminal,
-## then `show_stats` to view sent/received packet stats information
+## 別のターミナルを開き、テストパケットを送る
+## `show_stats` で送受信パケット量に関する情報を表示する
 	
 	$ trema send_packet --source host1 --dest host2
 	$ trema show_stats host1
@@ -27,12 +27,12 @@
 
 
 <!SLIDE small>
-# Exercise: View the Flow Table ####################################################
+# 演習: フローテーブル ####################################################
 
 	$ trema send_packet --source host2 --dest host1
 	$ trema dump_flows 0xabc
 
-## The above command displays the flow-table entries stored in the switch `0xabc`
+## 上記のコマンドは、スイッチ 0xabc のフローテーブルを表示する
 
 
 <!SLIDE center>
@@ -40,16 +40,16 @@
 
 
 <!SLIDE small>
-# Useful Sub-Commands ##########################################################
+# 今回使用した Trema のサブコマンド ##########################################################
 
 * `trema show_stats HOST_NAME`
 * `trema dump_flows SWITCH_NAME`
 
-## Various stats and internal info can be displayed with one simple command
+## 様々な統計情報と内部情報を表示可能
 
 
 <!SLIDE small>
-# Source Code: Learning Switch #################################################
+# Learning Switch のソースコード #################################################
 
 
 <!SLIDE smaller>
@@ -71,11 +71,11 @@
 	  # ...
 	end
 
-# Reads smoothly like a pseudo code!?
+# 擬似コードのように簡単に読むことができるはず？
 
 
 <!SLIDE smaller>
-# Read It Aloud! ###############################################################
+# 詳しく見ていこう ###############################################################
 
 	@@@ ruby
 	class LearningSwitch < Controller
@@ -93,21 +93,22 @@
 	  # ...
 	end
 
-* When a packet comes in as a packet-in message, make FDB learn its macsa and the in_port
-* Look up the destination's port number from packet's macda
-* If found: update switch's flow-table and do packet-out the packet
-* If not-found: flood the packet
+* Packet In メッセージが送られてきた時に、送信元 MAC アドレス (macsa) と受信ポート (in_port) を Forwarding DB (FDB) に記録する
+* 宛先 MAC アドレス (macda) から送出ポートを検索する
+* もし見つかれば、スイッチのフローテーブルを更新して、パケットを Packet-Out する
+* 見つからなければ、パケットを flood する
 
 
 <!SLIDE smaller>
-# Private Methods ##############################################################
+# プライベートメソッド ##############################################################
 
-* Actually `flow_mod`, `packet_out`, `flood` are not part of the Trema API, but  defined as private methods here
-* Proper use of names for private methods makes your code clean and can be read like pseudo-code
+* `flow_mod`, `packet_out`, `flood` は、learning_switch のプライベートメソッドです (Trema API ではありません)
+
+* 適切なネーミングは、コードの可読性を高めます
 
 
 <!SLIDE smaller>
-# Flow-Mod #####################################################################
+# flow_mod #####################################################################
 
 	@@@ ruby
 	class LearningSwitch < Controller
@@ -117,14 +118,14 @@
 	    send_flow_mod_add(
 	      dpid,
 	      :match => ExactMatch.from( message ),
-	      :actions => ActionOutput.new( port_no + 1 )
+	      :actions => ActionOutput.new( port_no )
 	    )
 	  end
 	  # ...
 	end
 
-* Echoes the packet that exactly matches with `message` to the next port
-* Short and clean
+* 受信パケットからマッチ条件を作り、指定のポートに出力
+* 短くて、見通しのよいコード
 
 
 <!SLIDE smaller>
@@ -177,7 +178,7 @@
 
 
 <!SLIDE small>
-# Learning Switch: Summary #####################################################
+# Learning Switch: サマリー #####################################################
 
-* Stats info: `trema show_stats`, `trema dump_flows`
-* "Write it short" API: `ExactMatch.from`, `send_flow_mod_add`
+* 内部の状態表示 : `trema show_stats`, `trema dump_flows`
+* 短く書くための API: `ExactMatch.from`, `send_flow_mod_add`
