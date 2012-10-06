@@ -51,7 +51,7 @@
 <!SLIDE small>
 # Sources ######################################################################
 
-* This Tutorial: <http://github.com/trema/GEC13/>
+* This Tutorial: <http://github.com/trema/tutorial-ja/>
 * Trema: <http://github.com/trema/>
 * Trema/Apps: <http://github.com/trema/apps/>
 * Web Page: <http://trema.github.com/trema/>
@@ -61,7 +61,7 @@
 
 
 <!SLIDE small>
-# コントリビュータ! ################################################################
+# コントリビュータ ################################################################
 
 * コントリビュータには、Trema T シャツを差し上げます
   * パッチ (New features/apps, enhancements, bug-fixes)
