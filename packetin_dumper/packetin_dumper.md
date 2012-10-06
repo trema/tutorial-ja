@@ -31,13 +31,13 @@
 
 
 <!SLIDE>
-## Q: How did you do that (sending test packets)? ##############################
+## Q: テストパケットを出すにはどうすればよい？ ##############################
 
 
 <!SLIDE small>
-# Virtual Host And Virtual Link ################################################
+# 仮想ホストと仮想リンク ################################################
 
-## Connect virtual hosts (host1, host2) to the virtual switch 0xabc
+## 仮想ホスト (host1, host2) を作り、仮想スイッチ 0xabc に接続する
 
 	@@@ ruby
 	# Add one virtual switch
@@ -49,21 +49,21 @@
 	link "0xabc", "host1"
 	link "0xabc", "host2"
 
-## Send test packets between virtual hosts as defined above
+## 一方の仮想ホストから他方へ、テストパケットを送る
 
 	$ trema send_packets --source host1 --dest host2
 
 
 <!SLIDE small>
-# Network Configuration File ###################################################
+# ネットワークコンフィグレーションファイル ###################################################
 
-* Simple enough to configure a test environment
-* Specify and construct any arbitrary network by just writing configuration statements in DSL
-* And also send test packet by one simple command
+* シンプルな記述で、テスト環境を構築
+* DSL を使って記述することで任意のネットワーク構成を実現
+* シンプルなコマンドでテストパケットを送信
 
 
 <!SLIDE small>
-# Example: A More Complicated Network ############################################
+# 例: より複雑なネットワーク ############################################
 
 	@@@ ruby
 	vswitch { dpid "0x1" }
@@ -84,7 +84,7 @@
 
 
 <!SLIDE>
-# Handling Packet-In ###########################################################
+# Packet-In をハンドリング ###########################################################
 
 
 <!SLIDE smaller>
@@ -100,12 +100,12 @@
 	  end
 	end
 
-* `packet_in`: arguments are dpid and a Packet-In message object (`message`)
-* `message.attribute` for inspecting the attributes of the Packet-In message
+* `packet_in`: dpid と Packet-In メッセージオブジェクト (`message`) が引数
+* `message.attribute` : Packet-In メッセージの各種アトリビュートを参照
 
 
 <!SLIDE smaller>
-# Exercise: Inspecting Other Packet-In Attributes ##############################
+# 演習: Packet-In の各種アトリビュートを参照 ##############################
 
 	@@@ ruby
 	# packetin-dumper.rb    
@@ -119,5 +119,5 @@
 	  end
 	end
 
-* Display other Packet-In attributes (total_len, macsa, macda ...)
-* Hint: Use `trema ruby` for the full API reference of PacketIn class
+* 他の Packet-In アトリビュートを表示してみる (total_len, macsa, macda ...)
+* ヒント: `trema ruby` を使い、Packet In クラスの API を参照してみよう
