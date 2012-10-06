@@ -1,31 +1,31 @@
 <!SLIDE>
-# Summary #######################################################################
+# サマリー #######################################################################
 
 
 <!SLIDE small incremental transition=uncover>
-# Trema: "OpenFlow like Rails" ##################################################
+# Trema: "Rails のように OpenFlow を" ##################################################
 
-* <i>Run It Quick</i>: Tight loops of coding, run, and debug
-  * Virtual network DSL
+* <i>書いたコードをすぐ動かせる</i>: コーディング、実行、デバッグのループを短いサイクルで
+  * 仮想ネットワーク DSL
   * `trema {run, send_packets, show_stats, up, kill}`
-* <i>Coding by Convention</i>: Write it short
-  * Auto handler dispatch by naming convention
-  * Class attributes: `periodic_timer_event`
+* <i>Coding by Convention</i>: 短く書く
+  * naming coversion によるイベントの自動振り分け
+  * Class アトリビュート: `periodic_timer_event`
   * Syntactic sugars: `ExactMatch.from`
-  * Default options: `send_flow_mod_add`
-* <i>Useful Sub-commands</i>
+  * デフォルトオプション: `send_flow_mod_add`
+* <i>Trema のサブコマンド</i>
   * `trema {dump_flows, ruby}`
 
 
 <!SLIDE small>
-# Next Step For Developers #####################################################
+# 開発者、次の一歩のために #####################################################
 
 * `[trema]/src/examples`
-  * Simple samples demonstrating API usage
-  * Good references for understanding both Ruby and C APIs
+  * API の使い方を示すシンプルなサンプルアプリケーション
+  * Ruby と C の API を理解するために最適なリファレンス
 * Trema/Apps <http://github.com/trema/apps>
-  * Practical/experimental controllers developed on top of Trema
-  * Good starting point for developing real-world controllers
+  * より実用的・実験的なコントローラアプリケーション
+  * 実際に使うためのコントローラ開発の出発点として最適
 
 
 <!SLIDE>
@@ -39,8 +39,8 @@
 <!SLIDE small>
 # Trema C ######################################################################
 
-* It's your choice ... Trema provides libraries for both Ruby and C
-* Trema C is also simple as Trema Ruby
+* Trema は Ruby と C 両方のライブラリを提供 … 開発者が選択可能
+* Trema C もまた Trema Ruby のようにシンプル
 
 <br />
 
@@ -61,13 +61,13 @@
 
 
 <!SLIDE small>
-# Contributors! ################################################################
+# コントリビュータ! ################################################################
 
-* Free Trema T-shirt for contributors!
-  * Patch (New features/apps, enhancements, bug-fixes)
-  * Bug report
-  * Documentation etc.
-* Send pull-requests and get the T!
+* コントリビュータには、Trema T シャツを差し上げます
+  * パッチ (New features/apps, enhancements, bug-fixes)
+  * バグレポート
+  * ドキュメント等
+* pull-requests を送って、T シャツを手に入れよう！
 
 
 <!SLIDE>
