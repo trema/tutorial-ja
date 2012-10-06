@@ -1,23 +1,23 @@
 <!SLIDE small>
 # Task E: Traffic Monitor ######################################################
 
-## Getting traffic data from flow_removed messages
+## flow_removed メッセージからトラフィックデータを取得する
 
 
 <!SLIDE smaller>
-# Exercise: Displaying Traffic Data ############################################
+# 演習: トラフィックデータを表示する ############################################
 
 	$ trema run traffic-monitor.rb -c traffic-monitor.conf
 
 
-	# (On another terminal,)
+	# (別のターミナルで、)
 	$ trema send_packets --source host1 --dest host2
 	$ trema send_packets --source host1 --dest host2
 	$ trema send_packets --source host2 --dest host1
 
-* Launch a "L2 switch with traffic monitoring" controller
-* Send test packets randomly
-* The controller displays and updates the traffic stats of each host
+* "トラフィックモニター付き L2 スイッチ" コントローラを起動
+* テストパケットをランダムに送る
+* コントローラは、各ホストのトラフィック情報を表示する
 
 
 <!SLIDE center>
@@ -25,7 +25,7 @@
 
 
 <!SLIDE smaller>
-# Getting Traffic Data #########################################################
+# トラフィック量を取得する #########################################################
 
 	@@@ ruby
 	class TrafficMonitor < Controller
@@ -48,13 +48,13 @@
 	end
 
 
-* Set each flow's lifetime to 10 seconds
-* Handle flow\_removed messages generated when a flow timeouts
-* Record the traffic amount transferred from the removed flow
+* 各フローを 10 秒でタイムアウトさせる
+* フローがタイムアウトした時に送られる flow\_removed メッセージをハンドリングする
+* フローにより転送されたトラフィック量を記録する
 
 
 <!SLIDE smaller>
-# Displaying Traffic Info ######################################################
+# トラフィック量を表示する ######################################################
 
 	@@@ ruby
 	class TrafficMonitor < Controller
@@ -74,7 +74,7 @@
 	  # ...
 	end
 
-* Shows the current time and traffic data stored in `@counter` every 10 seconds
+* 現在時刻と、`@counter` に記録されているトラフィック量を 10 秒ごとに表示
 
 
 <!SLIDE smaller>
@@ -89,13 +89,14 @@
 	  def show_counter ...
 	end
 
-* You can define timer handlers like a class attribute
-* Don't need to implement timer handling by yourself using threads etc.
-* Another example of <i>coding by convention</i>
+* クラスアトリビュートのようにタイマーハンドラを定義
+* スレッドを使った実装などを独自に行う必要がない
+* <i>coding by convention</i> の一例
 
 
 <!SLIDE small>
-# Traffic Monitor: Summary #####################################################
+# Traffic Monitor: サマリー #####################################################
 
-* Shows how to use the traffic data stored in flow_removed messages
-* A practical example of learning switch controller
+* flow_removed メッセージ中のトラフィックデータの取り扱い
+* learning_switch よりも一歩進んだコントローラ
+
