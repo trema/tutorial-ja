@@ -1,3 +1,4 @@
-source 'https://rubygems.org'
-
-gem 'showoff', '~> 0.9.7'
+source :rubygems
+gem 'redcarpet'
+gem 'showoff'
+gem 'heroku'
