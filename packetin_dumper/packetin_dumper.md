@@ -1,29 +1,31 @@
-<!SLIDE small>
-# Task C: Packet-In Dumper #####################################################
+<!SLIDE medium>
+# Task C: PacketIn Dumper ######################################################
 
-## Packet-In メッセージの扱い
+## PacketIn メッセージを扱う
 
 
-<!SLIDE small>
-## 演習 : Packet-In メッセージの内容を表示 #############################
+<!SLIDE medium>
+## PacketIn の中身を表示 #######################################################
 
-	$ trema run packetin-dumper.rb -c packetin-dumper.conf
+	$ trema run packetin-dumper.rb \
+        -c packetin-dumper.conf
 
-* Packet-In dumper コントローラを起動します
-* 仮想ネットワークも同時に起動します (= 1 台の仮想スイッチと 2 台の仮想ホスト host1, host2)
+* PacketIn dumper コントローラを起動
+* 仮想スイッチ 1 台と仮想ホスト host1, host2 も起動
 
 
 <!SLIDE center>
 ![overview](packetin_dumper1.png)
 
 
-<!SLIDE small>
-## 演習 : Packet-In メッセージの内容を表示 #############################
+<!SLIDE medium>
+## パケットを送って PacketIn を起こす ##########################################
 
+	(別のターミナルで実行)
 	$ trema send_packets --source host1 --dest host2
 
-* 別のターミナルを開き、host1 から host2 へとパケットを送信します
-* その結果、コントローラに送られた Packet In メッセージがダンプ表示されます
+* host1 から host2 へとパケットを送信
+* コントローラに Packet In が送られ中身を表示
 
 
 <!SLIDE center>
@@ -31,39 +33,41 @@
 
 
 <!SLIDE>
-## Q: テストパケットを出すにはどうすればよい？ ##############################
+## Q: テストパケットを出すには？ ###############################################
 
 
-<!SLIDE small>
-# 仮想ホストと仮想リンク ################################################
+<!SLIDE medium>
+# 仮想ホストと仮想リンク #######################################################
 
-## 仮想ホスト (host1, host2) を作り、仮想スイッチ 0xabc に接続する
+## A-1: 仮想ホストを作り仮想スイッチに接続
 
 	@@@ ruby
 	# Add one virtual switch
 	vswitch { dpid "0xabc" }
+
 	# Add two virtual hosts
 	vhost "host1"
 	vhost "host2"
+
 	# Then connect them to the switch 0xabc
 	link "0xabc", "host1"
 	link "0xabc", "host2"
 
-## 一方の仮想ホストから他方へ、テストパケットを送る
+## A-2: `send_packets` でパケットを送る
 
 	$ trema send_packets --source host1 --dest host2
 
 
-<!SLIDE small>
-# ネットワークコンフィグレーションファイル ###################################################
+<!SLIDE medium>
+# 仮想ネットワーク設定ファイル #################################################
 
-* シンプルな記述で、テスト環境を構築
-* DSL を使って記述することで任意のネットワーク構成を実現
+* DSL でノート PC 上にテスト環境を構築
 * シンプルなコマンドでテストパケットを送信
+* Ruby の文法がフルに使える (言語内 DSL)
 
 
-<!SLIDE small>
-# 例: より複雑なネットワーク ############################################
+<!SLIDE medium>
+# 例: より複雑なネットワーク ###################################################
 
 	@@@ ruby
 	vswitch { dpid "0x1" }
@@ -73,51 +77,67 @@
 	vhost "host2"
 	vhost "host3"
 	vhost "host4"
-	  ...    
+	  ...
 	link "0x1", "0x2
-	  ...    
+	  ...
 	link "0x1", "host1"
 	link "0x1", "host2"
 	link "0x2", "host3"
 	link "0x2", "host4"
-	  ...    
+	  ...
+
+<!SLIDE medium>
+# 例: Ruby の文法も使える ######################################################
+
+	@@@ ruby
+	# スイッチ 10 台のフルメッシュ
+	$num_switch = 10
+
+	(1..$num_switch).each do |each|
+	 vswitch { dpid each.to_hex }
+	  (1..$num_switch).each do |other|
+	    if each != other
+	      link each.to_hex, other.to_hex
+	    end
+	  end
+	end
 
 
 <!SLIDE>
-# Packet-In をハンドリング ###########################################################
+# PacketIn のハンドリング ######################################################
 
 
-<!SLIDE smaller>
-# `PacketinDumper#packet_in` ###################################################
+<!SLIDE small>
+# `#packet_in` #################################################################
 
 	@@@ ruby
-	# packetin-dumper.rb    
+	# packetin-dumper.rb
 	class PacketinDumper < Controller
-	  def packet_in dpid, message
+	  def packet_in(dpid, message)
 	    info "received a packet_in"
-	    info "dpid: #{ datapath_id.to_hex }"
-	    info "in_port: #{ message.in_port }"
+	    info "dpid: #{datapath_id.to_hex}"
+	    info "in_port: #{message.in_port}"
 	  end
 	end
 
-* `packet_in`: dpid と Packet-In メッセージオブジェクト (`message`) が引数
-* `message.attribute` : Packet-In メッセージの各種アトリビュートを参照
+* `packet_in` の引数: dpid と PacketIn メッセージ (`message`)
+* `message#attr` : Packet-In メッセージの各種情報
 
 
-<!SLIDE smaller>
-# 演習: Packet-In の各種アトリビュートを参照 ##############################
+<!SLIDE small>
+# PacketIn のほかの情報を見る ##################################################
 
 	@@@ ruby
-	# packetin-dumper.rb    
+	# packetin-dumper.rb
 	class PacketinDumper < Controller
-	  def packet_in dpid, message
+	  def packet_in(dpid, message)
 	    info "received a packet_in"
-	    info "dpid: #{ datapath_id.to_hex }"
-	    info "in_port: #{ message.in_port }"
-	    info "total_len: #{ message.total_len }"        
-	      ...        
+	    info "dpid: #{datapath_id.to_hex}"
+	    info "in_port: #{message.in_port}"
+	    info "total_len: #{message.total_len}"
+	      ...
 	  end
 	end
 
-* 他の Packet-In アトリビュートを表示してみる (total_len, macsa, macda ...)
-* ヒント: `trema ruby` を使い、Packet In クラスの API を参照してみよう
+* total_len, macsa, macda などなど
+* ヒント: `trema ruby` で PacketIn クラスの API を調べる
