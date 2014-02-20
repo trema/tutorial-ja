@@ -1,9 +1,13 @@
+.medium {
+    font-size: 90%;
+}
+
 .small {
-    font-size: 70%;
+    font-size: 80%;
 }
 
 .smaller {
-    font-size: 60%;
+    font-size: 70%;
 }
 
 .slide_info {
