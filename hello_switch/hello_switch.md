@@ -4,19 +4,20 @@
 
 
 <!SLIDE>
-## "OpenFlow スイッチを持っていないけど、<br />どうすればいい？"
+## "OpenFlow スイッチは持ってない.<br />どうすればいい？"
 
 
 <!SLIDE small>
-# 演習 : Hello Switch コントローラ ############################################
+# "Hello Switch" を実行 ########################################################
 
 	$ trema run hello-switch.rb -c hello-switch.conf
-	Password: xxxxxxxx  # Enter your password here
+	Password: vagrant
 	Hello 0xabc!  # Ctrl-c to quit
 
-* <b>ソフトウェア版 OpenFlow スイッチ (dpid = 0xabc)</b> を起動し、コントローラと接続します
-* コントローラは `"Hello 0xabc!"` と表示します
-* ソフトウェア版 OpenFlow スイッチの起動は `hello-switch.conf` に定義します
+* <b>OpenFlow ソフトウェアスイッチ</b>を起動しコントローラと接続
+* スイッチの Datapth ID = 0xabc
+* コントローラは `"Hello 0xabc!"` と表示
+* スイッチの起動は `hello-switch.conf` で定義
 
 
 <!SLIDE center>
@@ -27,15 +28,18 @@
 # hello-switch.conf ############################################################
 
 	@@@ ruby
-	#    
 	# Add a switch with dpid == 0xabc
-	#    
+
 	vswitch { dpid "0xabc" }
+
 	# or
+
 	vswitch { datapath_id "0xabc" }
 
-* ソフトウェア版 OpenFlow スイッチが起動し、コントローラとのコネクションを確立します
-* Trema は <b>Full-stack</b> の開発フレームワークです。ノート PC が一台あれば、物理スイッチを持っていなくても開発ができます
+* 使いたいスイッチを設定ファイルに書くだけ
+  * ソフトウェアスイッチが起動し、コントローラと接続
+* Trema は<b>フルスタック</b>
+  * 物理スイッチを持ってなくてもノート PC 一台で OK
 
 
 <!SLIDE small>
@@ -43,18 +47,18 @@
 
 	@@@ ruby
 	class HelloSwitch < Controller
-	  def switch_ready dpid
+	  def switch_ready(dpid)
 	    info "Hello #{ dpid.to_hex }!"
 	  end
 	end
 
-* `switch_ready` は、スイッチがコントローラに接続したときに呼ばれるハンドラです
-* 引数の `dpid` には接続したスイッチの ID が格納されます
-* `.to_hex` をつけることで `dpid` を 16 進数で表示します
+* `switch_ready`: スイッチが接続したときに呼ばれるハンドラ
+* `dpid` 引数: 接続してきたスイッチの ID が格納
+* `.to_hex` をつけることで `dpid` を 16 進文字列に変換
 
 
 <!SLIDE small>
-# 演習: スイッチの追加 ####################################################
+# 演習: スイッチの追加 #########################################################
 
 	@@@ ruby
 	# hello-switch.conf
@@ -67,18 +71,18 @@
 	$ trema run hello-switch.rb -c hello-switch.conf
 	???
 
-* `hello-switch.conf` にスイッチを追加して `trema run` したとき、何が表示される？
-* 注 : 各スイッチの dpid はユニークである必要があります
+* `hello-switch.conf` にスイッチを追加して `trema run` すると？
+* 注 : 各スイッチの dpid はユニークにすること
 
 
-<!SLIDE small incremental transition=uncover>
-# ここまでのサマリー ###############################################################
+<!SLIDE medium incremental transition=uncover>
+# ここまでのサマリー ###########################################################
 
-## Trema は "Post-Rails" なモダンなフレームワークです
+## Trema は "Post-Rails" でモダンなフレームワーク
 
 <br />
 
-* <i>書いたコードをすぐ動かせる</i>: `trema run`
-* <i>Coding by Convention</i>: 分かりやすく名付けられた各種メソッド
-* <i>Full-Stack</i>: ネットワーク DSL によるエミュレーション
+* 書いたコードをすぐ動かせる: `trema run`
+* Coding by Convention: ハンドラの自動ディスパッチ
+* フルスタック: ネットワークのエミュレーション
 * 便利なサブコマンド : `trema ruby`
