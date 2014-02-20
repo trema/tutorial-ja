@@ -1,22 +1,22 @@
-<!SLIDE small>
+<!SLIDE>
 # Task D: Learning Switch ######################################################
 
-## flow\_mod と packet\_out を送る
+## FlowMod と PacketOut を送る
 
 
-<!SLIDE smaller>
-# 演習: 送受信パケット量を表示する ##################################################
+<!SLIDE small>
+# 送受信パケット量を表示 #######################################################
 
-## L2 スイッチコントローラ (learning_switch) を起動する:
+## L2 スイッチ (learning_switch) を起動:
 
 	$ trema run learning-switch.rb -c learning-switch.conf
 
 <br />
 <br />
 
-## 別のターミナルを開き、テストパケットを送る
-## `show_stats` で送受信パケット量に関する情報を表示する
-	
+## 別のターミナルでテストパケットを送る
+## `show_stats` で送受信パケット量を表示
+
 	$ trema send_packet --source host1 --dest host2
 	$ trema show_stats host1
 	$ trema show_stats host2
@@ -26,13 +26,13 @@
 ![overview](show_stats.png)
 
 
-<!SLIDE small>
-# 演習: フローテーブル ####################################################
+<!SLIDE medium>
+# フローテーブルを見よう #######################################################
+
+## スイッチ 0xabc のフローテーブルを表示
 
 	$ trema send_packet --source host2 --dest host1
 	$ trema dump_flows 0xabc
-
-## 上記のコマンドは、スイッチ 0xabc のフローテーブルを表示する
 
 
 <!SLIDE center>
@@ -40,7 +40,7 @@
 
 
 <!SLIDE small>
-# 今回使用した Trema のサブコマンド ##########################################################
+# 新しいサブコマンド ###########################################################
 
 * `trema show_stats HOST_NAME`
 * `trema dump_flows SWITCH_NAME`
@@ -49,18 +49,18 @@
 
 
 <!SLIDE small>
-# Learning Switch のソースコード #################################################
+# Learning Switch のソースコード ###############################################
 
 
-<!SLIDE smaller>
+<!SLIDE small>
 # Learning Switch ##############################################################
 
 	@@@ ruby
 	class LearningSwitch < Controller
 	  # ...
-	  def packet_in dpid, message
+	  def packet_in(dpid, message)
 	    @fdb.learn message.macsa, message.in_port
-	    port_no = @fdb.lookup( message.macda )
+	    port_no = @fdb.lookup(message.macda)
 	    if port_no
 	      flow_mod dpid, message, port_no
 	      packet_out dpid, message, port_no
@@ -71,18 +71,18 @@
 	  # ...
 	end
 
-# 擬似コードのように簡単に読むことができるはず？
+# 擬似コードのようにスラスラ読める(？)
 
 
 <!SLIDE smaller>
-# 詳しく見ていこう ###############################################################
+# 詳しく見る ###################################################################
 
 	@@@ ruby
 	class LearningSwitch < Controller
 	  # ...
-	  def packet_in dpid, message
+	  def packet_in(dpid, message)
 	    @fdb.learn message.macsa, message.in_port
-	    port_no = @fdb.lookup( message.macda )
+	    port_no = @fdb.lookup(message.macda)
 	    if port_no
 	      flow_mod dpid, message, port_no
 	      packet_out dpid, message, port_no
@@ -93,46 +93,47 @@
 	  # ...
 	end
 
-* Packet In メッセージが送られてきた時に、送信元 MAC アドレス (macsa) と受信ポート (in_port) を Forwarding DB (FDB) に記録する
+* PacketIn を受け取り、送信元 MAC アドレス (macsa) と受信ポート (in_port) を Forwarding DB (FDB) に記録
 * 宛先 MAC アドレス (macda) から送出ポートを検索する
-* もし見つかれば、スイッチのフローテーブルを更新して、パケットを Packet-Out する
-* 見つからなければ、パケットを flood する
+* もし見つかれば、スイッチのフローテーブルを更新して、パケットを PacketOut
+* 見つからなければ、パケットを flood
 
 
-<!SLIDE smaller>
-# プライベートメソッド ##############################################################
+<!SLIDE small>
+# プライベートメソッド #########################################################
 
-* `flow_mod`, `packet_out`, `flood` は、learning_switch のプライベートメソッドです (Trema API ではありません)
+* `flow_mod`, `packet_out`, `flood` はプライベートメソッド
+  * 標準の Trema API をラップしたもの
+  * `#packet_in` を短く, 読みやすくするために定義
+* 適切なネーミングはコードの可読性を高める
 
-* 適切なネーミングは、コードの可読性を高めます
 
-
-<!SLIDE smaller>
-# flow_mod #####################################################################
+<!SLIDE small>
+# `#flow_mod` ##################################################################
 
 	@@@ ruby
 	class LearningSwitch < Controller
 	  # ...
 	  private
-	  def flow_mod dpid, message, port_no
+	  def flow_mod(dpid, message, port_no)
 	    send_flow_mod_add(
 	      dpid,
-	      :match => ExactMatch.from( message ),
-	      :actions => ActionOutput.new( port_no )
+	      :match => ExactMatch.from(message),
+	      :actions => ActionOutput.new(port_no)
 	    )
 	  end
 	  # ...
 	end
 
 * 受信パケットからマッチ条件を作り、指定のポートに出力
-* 短くて、見通しのよいコード
+* 短く見通しのよいコード
 
 
-<!SLIDE smaller>
+<!SLIDE small>
 # Syntactic Sugar: `ExactMatch.from()` #########################################
 
 	@@@ ruby
-	ExactMatch.from( message )
+	ExactMatch.from(message)
 
 # vs.
 
@@ -149,15 +150,15 @@
 	)
 
 
-<!SLIDE smaller>
+<!SLIDE small>
 # Trema vs. NOX Python #########################################################
 
 	@@@ ruby
 	# Trema
 	send_flow_mod_add(
 	  dpid,
-	  :match => ExactMatch.from( message ),
-	  :actions => ActionOutput.new( port_no )
+	  :match => ExactMatch.from(message),
+	  :actions => ActionOutput.new(port_no)
 	)
 
 # vs.
@@ -167,7 +168,7 @@
 	inst.install_datapath_flow(
 	  dpid,
 	  extract_flow(packet),
-	  CACHE_TIMEOUT, 
+	  CACHE_TIMEOUT,
 	  openflow.OFP_FLOW_PERMANENT,
 	  [[openflow.OFPAT_OUTPUT, [0, prt[0]]]],
 	  bufid,
@@ -178,7 +179,7 @@
 
 
 <!SLIDE small>
-# Learning Switch: サマリー #####################################################
+# Learning Switch: まとめ ######################################################
 
 * 内部の状態表示 : `trema show_stats`, `trema dump_flows`
 * 短く書くための API: `ExactMatch.from`, `send_flow_mod_add`
