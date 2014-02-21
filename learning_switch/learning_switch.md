@@ -26,6 +26,110 @@
 ![overview](show_stats.png)
 
 
+<!SLIDE center>
+![switch](switch.001.jpg)
+
+
+<!SLIDE center>
+![switch](switch.002.jpg)
+
+
+<!SLIDE center>
+![switch](switch.003.jpg)
+
+
+<!SLIDE center>
+![switch](switch.004.jpg)
+
+
+<!SLIDE center>
+![switch](switch.005.jpg)
+
+
+<!SLIDE center>
+![switch](switch.006.jpg)
+
+
+<!SLIDE center>
+![switch](switch.007.jpg)
+
+
+<!SLIDE center>
+![switch](switch.008.jpg)
+
+
+<!SLIDE center>
+![switch](switch.009.jpg)
+
+
+<!SLIDE center>
+![switch](switch.010.jpg)
+
+
+<!SLIDE center>
+![switch](switch.011.jpg)
+
+
+<!SLIDE center>
+![switch](switch.012.jpg)
+
+
+<!SLIDE center>
+![switch](switch.013.jpg)
+
+
+<!SLIDE center>
+![switch](switch.014.jpg)
+
+
+<!SLIDE center>
+![switch](switch.015.jpg)
+
+
+<!SLIDE center>
+![switch](switch.016.jpg)
+
+
+<!SLIDE center>
+![switch](switch.017.jpg)
+
+
+<!SLIDE center>
+![switch](switch.018.jpg)
+
+
+<!SLIDE center>
+![switch](switch.019.jpg)
+
+
+<!SLIDE center>
+![switch](switch.020.jpg)
+
+
+<!SLIDE center>
+![switch](switch.021.jpg)
+
+
+<!SLIDE center>
+![switch](switch.022.jpg)
+
+
+<!SLIDE center>
+![switch](switch.023.jpg)
+
+
+<!SLIDE center>
+![switch](switch.024.jpg)
+
+
+<!SLIDE center>
+![switch](switch.025.jpg)
+
+
+<!SLIDE center>
+![switch](switch.026.jpg)
+
+
 <!SLIDE medium>
 # フローテーブルを見よう #######################################################
 
